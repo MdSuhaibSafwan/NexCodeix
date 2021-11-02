@@ -59,6 +59,7 @@ class User(AbstractBaseUser):
     permanent_address = models.TextField(null=True, blank=True)
     present_address = models.TextField(null=True, blank=True)
 
+    verified = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False)
     superuser = models.BooleanField(default=False)
@@ -103,4 +104,7 @@ class User(AbstractBaseUser):
     @property
     def is_active(self):
         return self.active
+
+    def is_verified(self):
+        return self.verified
 

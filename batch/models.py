@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 User = get_user_model()
 
@@ -7,8 +9,17 @@ BATCH_CATEGORY = (
     ("PY", "PYTHON"),
     ("DJ", "DJANGO"),
     ("FS", "FLASK"),
-
 )
+
+DAYS_LIST = {
+    "S": "Sunday",
+    "M": "Monday",
+    "T": "Tuesday",
+    "W": "Wednesday",
+    "U": "Thursday",  # U --> Thursday
+    "F": "Friday",
+    "Z": "Saturday",  # Z --> Saturday
+} 
 
 
 class Batch(models.Model):
@@ -18,10 +29,43 @@ class Batch(models.Model):
     user = models.ManyToManyField(User, through="BatchUser", related_name="batches")
 
     started = models.BooleanField(default=False)
-    start_time = models.DateTimeField(null=True, blank=True)
+    start_date = models.DateTimeField(null=True, blank=True)
+
+    per_week = models.IntegerField(default=2)
+    days = models.CharField(max_length=4, null=True, blank=True)
+    time_starts = models.TimeField(null=True, blank=True)
+    time_ends = models.TimeField(null=True, blank=True)
 
     def __str__(self):
         return self.name
+
+    def validate_started(self):
+        time_now = timezone.now()
+        start_date = self.start_date
+        started = self.started
+
+        if (time_now < start_date) and (started == True):
+            raise ValidationError("Time did not reach upto the point to start")
+
+    def validate_days(self):
+        days = self.days
+        if days is None:
+            return None
+
+        days = list(days)
+        for i in days:
+            if i not in DAYS_LIST:
+                raise ValidationError("This should be a day Word")
+
+        return True        
+
+    def save(self, *args, **kwargs):
+        if self.started and self.start_date:
+            self.validate_days()
+            self.validate_started()
+
+        return super().save(*args, **kwargs)
+        
 
 
 class BatchUser(models.Model):
@@ -30,5 +74,19 @@ class BatchUser(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        unique_together = ["user", "batch"]
+
     def __str__(self):
         return self.batch.name
+
+    def validate_user(self):
+        if not self.user.is_verified:
+            raise ValidationError("User not Verified")
+
+        return True
+
+    def save(self, *args, **kwargs):
+        self.validate_user()
+        return super().save(*args, **kwargs)
+        
