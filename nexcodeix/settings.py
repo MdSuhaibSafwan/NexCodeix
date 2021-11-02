@@ -7,7 +7,7 @@ SECRET_KEY = 'django-insecure-nuc1v(8w&9ke6ekkyhqy_@a8(mzeeyy73r_)tow_al%ebt9u2w
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", ]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "nexcodeix.herokuapp.com"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
