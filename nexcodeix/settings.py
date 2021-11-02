@@ -97,7 +97,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
 
 STATIC_DIR1 = os.path.join(BASE_DIR, "static")
 STATIC_DIRS = [
