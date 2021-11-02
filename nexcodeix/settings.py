@@ -1,11 +1,15 @@
 import os
+import environ
 from pathlib import Path
+
+env = environ.Env()
+env.read_env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-nuc1v(8w&9ke6ekkyhqy_@a8(mzeeyy73r_)tow_al%ebt9u2w'
 
-DEBUG = True
+DEBUG = os.environ.get("DEBUG") == "True"
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", "nexcodeix.herokuapp.com"]
 
@@ -63,12 +67,25 @@ AUTH_USER_MODEL = 'user.User'
 
 WSGI_APPLICATION = 'nexcodeix.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get("DATABASE_NAME"),
+            'HOST': os.environ.get("DATABASE_HOST"),
+            'USER': os.environ.get("DATBASE_USER"),
+            'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
+            'PORT': int(os.environ.get("DATABASE_PORT")),
+        }
+    }   
+
 
 
 AUTH_PASSWORD_VALIDATORS = [
