@@ -6,9 +6,6 @@ from django.core.exceptions import ValidationError
 class UserManager(BaseUserManager):
 
     def create_user(self, email, password, is_active=True, is_superuser=True, is_staff=True):
-        print("Here t came")
-        print()
-        print()
         if not email:
             raise ValidationError("Users should always have an Email...")
 
@@ -55,12 +52,12 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=100)
-    middle_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=25)
+    middle_name = models.CharField(max_length=100, null=True, blank=True)
+    last_name = models.CharField(max_length=100, null=True)
+    phone = models.CharField(max_length=25, null=True)
 
-    permanent_address = models.TextField()
-    present_address = models.TextField()
+    permanent_address = models.TextField(null=True, blank=True)
+    present_address = models.TextField(null=True, blank=True)
 
     active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False)

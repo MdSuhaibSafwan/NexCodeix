@@ -24,6 +24,10 @@ INSTALLED_APPS = [
 
     'crispy_forms',
     'rest_framework',
+
+    'django_celery_beat',
+    'django_celery_results',
+
 ]
 
 MIDDLEWARE = [
@@ -38,10 +42,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'nexcodeix.urls'
 
+TEMPLATES_DIR1 = os.path.join(BASE_DIR, "Templates")
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_DIR1, ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -93,6 +98,15 @@ USE_L10N = True
 USE_TZ = True
 
 
+
+STATIC_DIR1 = os.path.join(BASE_DIR, "static")
+STATIC_DIRS = [
+    STATIC_DIR1, 
+]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "static/media")
+MEDIA_URL = "/media/"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
