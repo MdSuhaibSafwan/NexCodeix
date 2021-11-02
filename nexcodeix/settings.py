@@ -67,26 +67,35 @@ AUTH_USER_MODEL = 'user.User'
 
 WSGI_APPLICATION = 'nexcodeix.wsgi.application'
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+# if DEBUG:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': os.environ.get("DATABASE_NAME"),
+#             'HOST': os.environ.get("DATABASE_HOST"),
+#             'USER': os.environ.get("DATBASE_USER"),
+#             'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
+#             'PORT': int(os.environ.get("DATABASE_PORT")),
+#         }
+#     }   
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get("DATABASE_NAME"),
+        'HOST': os.environ.get("DATABASE_HOST"),
+        'USER': os.environ.get("DATBASE_USER"),
+        'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
+        'PORT': int(os.environ.get("DATABASE_PORT")),
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get("DATABASE_NAME"),
-            'HOST': os.environ.get("DATABASE_HOST"),
-            'USER': os.environ.get("DATBASE_USER"),
-            'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
-            'PORT': int(os.environ.get("DATABASE_PORT")),
-        }
-    }   
-
-
+}   
 
 AUTH_PASSWORD_VALIDATORS = [
     {
