@@ -36,6 +36,8 @@ class Batch(models.Model):
     time_starts = models.TimeField(null=True, blank=True)
     time_ends = models.TimeField(null=True, blank=True)
 
+    date_created = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return self.name
 
@@ -90,3 +92,26 @@ class BatchUser(models.Model):
         self.validate_user()
         return super().save(*args, **kwargs)
         
+
+class BatchClass(models.Model):
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
+
+    day = models.CharField(max_length=4, null=True, blank=True)
+    started = models.BooleanField(default=False)
+    start_date = models.DateTimeField(null=True, blank=True)
+    time_starts = models.TimeField(null=True, blank=True)
+    time_ends = models.TimeField(null=True, blank=True)
+
+    date_created = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
+
+
+class ClassMaterials(models.Model):
+    batch_class = models.OneToOneField(BatchClass, on_delete=models.CASCADE)
+    video = models.FileField(upload_to="batch/class/video", null=True, blank=True)
+    git_link = models.CharField(max_length=2040, blank=True, null=True)
+    files = models.FileField(upload_to="batch/class/files", blank=True, null=True)
+
+    def __str__(self):
+        return self.batch_class.batch.name + " Materials"
+

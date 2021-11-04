@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Batch, BatchUser
+from .models import Batch, BatchUser, BatchClass, ClassMaterials
 
 
 class BatchAdmin(admin.ModelAdmin):
@@ -8,3 +8,5 @@ class BatchAdmin(admin.ModelAdmin):
 
 admin.site.register(Batch, BatchAdmin)
 admin.site.register(BatchUser)
+admin.site.register(BatchClass)
+admin.site.register(ClassMaterials)
