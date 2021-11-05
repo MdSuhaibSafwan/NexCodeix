@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.exceptions import ValidationError
+from nexcodeix.common import uuid_without_dash
 
 
 class UserManager(BaseUserManager):
@@ -50,11 +51,12 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
+    id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid_without_dash)
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True)
-    phone = models.CharField(max_length=25, null=True)
+    phone = models.CharField(max_length=25, null=True, unique=True)
 
     permanent_address = models.TextField(null=True, blank=True)
     present_address = models.TextField(null=True, blank=True)

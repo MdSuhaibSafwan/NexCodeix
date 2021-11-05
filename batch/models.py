@@ -1,7 +1,9 @@
+import uuid
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from nexcodeix.common import uuid_without_dash
 
 User = get_user_model()
 
@@ -23,6 +25,7 @@ DAYS_LIST = {
 
 
 class Batch(models.Model):
+    id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid_without_dash)
     name = models.CharField(max_length=50)
     batch_category = models.CharField(max_length=2, choices=BATCH_CATEGORY)
 
