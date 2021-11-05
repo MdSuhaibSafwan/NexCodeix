@@ -1,6 +1,6 @@
 from django import forms
 from . import models
-from .models import Batch, BatchUser
+from .models import Batch, BatchUser, BatchClass, ClassMaterials
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -41,4 +41,7 @@ class BatchUserForm(forms.ModelForm):
     class Meta:
         model = BatchUser
         fields = "__all__"
+
+    def validate_unique(self):
+        return super().validate_unique()
 
