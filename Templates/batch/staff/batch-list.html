@@ -1,0 +1,31 @@
+{% extends "Components/base.html" %}
+
+{% block css %}
+    <style>
+        .batches {
+            justify-items: center;
+               
+        }
+    </style>
+
+{% endblock css %}
+
+{% block content %}
+
+    <div class="batches row">
+        {% for batch in batches %}
+            <div class="col-sm-3">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ batch.name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ batch.batch_category }}</h6>
+                        <p class="card-text">{{ batch.id }}</p>
+                        <a href="#" class="card-link">Track Batch</a>
+                        <a href="#" class="card-link">Visit it</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock content %}

@@ -1,13 +1,14 @@
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import get_user_model
 from .models import Batch, BatchUser
-from .forms import BatchForm, BatchUserForm
+from .forms import BatchCreationForm, BatchUpdateForm, BatchUserForm
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, ValidationError
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 
 
 class BatchListView(ListView):
     template_name = "batch/staff/batch-list.html"
+    context_object_name = "batches"
 
     def get_queryset(self):
         qs = Batch.objects.all()
@@ -16,7 +17,8 @@ class BatchListView(ListView):
 
 class BatchCreateView(CreateView):
     template_name = "batch/staff/batch-create.html"
-    form_class = BatchForm
+    form_class = BatchCreationForm
+    success_url = "/"
 
     def form_valid(self, form):
         """
@@ -27,12 +29,16 @@ class BatchCreateView(CreateView):
 
 class BatchUpdateView(UpdateView):
     template_name = "batch/staff/batch-create.html"
-    form_class = BatchForm
+    form_class = BatchUpdateForm
     lookup_url_kwarg = "id"
+    success_url = "/"
 
     def get_object(self):
         batch_id = self.kwargs.get(self.lookup_url_kwarg)
         obj = get_object_or_404(Batch, id=batch_id)
+        form = self.get_form()
+        form.instance.update = True
+        print("Instance update set to True", form)
         return obj
 
     def form_valid(self, form):
