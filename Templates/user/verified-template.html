@@ -1,0 +1,12 @@
+{% extends "Components/base.html" %}
+
+{% block content %}
+
+{% if verified == True %}
+    <h2>Successfully Verified</h2>
+{% else %}
+    <h2>Verifying</h2>
+    <a href="">Reload again</a>
+{% endif %}
+
+{% endblock content %}

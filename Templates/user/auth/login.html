@@ -1,0 +1,28 @@
+{% extends "Components/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+    <style>
+        .login-form {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .asteriskField {
+            display: none;
+        }
+    </style>
+
+{% endblock css %}
+
+{% block content %}
+
+<div class="container">
+    <legend>Join Today!</legend>
+    <form method="POST" class="login-form">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-outline-primary mt-3" type="submit">Submit</button>
+    </form>
+</div>
+
+{% endblock content %}

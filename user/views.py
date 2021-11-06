@@ -3,19 +3,26 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from .forms import UserForm, UserLoginForm
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 
 
 User = get_user_model()
 
 
 def verify_user(request):
-    id = request.query_params.get("id")
-    obj = get_object_or_404(User, id=id)
-    obj.verified = True
-    obj.save()
+    query_id = request.GET.get("id")
+    # query_id = 2
+    if not query_id:
+        raise Http404("No Id is given to the url")
+    obj = get_object_or_404(User, id=query_id)
+    if obj.verified:
+        verified = True
+    else:
+        obj.verified = True
+        obj.save()
+        verified = "verifying"
     context = {
-
+        "verified": verified,
     }
     
     return render(request, "user/verified-template.html", context)
@@ -24,29 +31,17 @@ def verify_user(request):
 class UserRegistrationView(CreateView):
     form_class = UserForm
     success_url = "/"
+    template_name = "user/auth/registration.html"
 
     def form_valid(self, form):
-        return super().form_valid(form)
-
-
-class UserLoginView(CreateView):
-    form_class = UserLoginForm
-    success_url = "/"
-
-    def form_valid(self, form):
-        email = form.instance.email
-        password = form.instance.password
-        auth_user = authenticate(email=email, password=password)
-        if auth_user:
-            login(self.request, auth_user)
-            messages.success(self.request, "Logged in")
-        else:
-            messages.warning(self.request, "Invalid Credentials provided")
-            return self.form_invalid(form)
-
+        form_obj = form.save(commit=False)
+        self.object = form_obj
+        print("Form Object ", form_obj)
+        password = form.cleaned_data.get("password")
+        print("password ", password)
+        form_obj.set_password(password)
+        form_obj.save()
         return HttpResponseRedirect(self.get_success_url())
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+
+
 

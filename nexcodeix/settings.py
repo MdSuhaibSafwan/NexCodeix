@@ -125,6 +125,8 @@ USE_TZ = True
 
 REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
 
+CRISPY_TEMPLATE_PACK = "bootstrap4"
+
 STATIC_DIR1 = os.path.join(BASE_DIR, "static")
 STATIC_DIRS = [
     STATIC_DIR1, 
