@@ -4,5 +4,10 @@ from . import views
 urlpatterns = [
     path("all/", views.BatchListView.as_view(), ),
     path("create/", views.BatchCreateView.as_view(), ),
-    path("update/<id>/", views.BatchUpdateView.as_view(), )
+    path("update/<id>/", views.BatchUpdateView.as_view(), ),
+
+
+    path("join/<id>/", views.JoinABatchView.as_view(), name="join_a_batch_view"),
+    path("joining/cancel/<batch_id>/", views.cancel_batch_join_request, name="cancel_batch_joining"),
+
 ]

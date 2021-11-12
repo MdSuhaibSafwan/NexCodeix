@@ -1,5 +1,6 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import get_user_model
+from django.contrib import messages
 from .models import Batch, BatchUser
 from .forms import BatchCreationForm, BatchUpdateForm, BatchUserForm
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, ValidationError
@@ -69,7 +70,7 @@ def next_batches_view(request):
 
 
 class JoinABatchView(LoginRequiredMixin, DetailView):
-    template_name = ""
+    template_name = "batch/user/join_batch.html"
     lookup_url_kwarg = "id"
 
     def get_batch(self):
@@ -79,12 +80,44 @@ class JoinABatchView(LoginRequiredMixin, DetailView):
 
     def get_object(self):
         obj = self.get_batch()
+        self.curr_object = obj
         return obj
 
     def get_bkash_form(self):
         pass
 
+    def check_if_user_is_in_batch(self, batch):
+        user = self.request.user
+        qs = batch.batchuser_set.filter(user=user)
+        if qs.exists():
+            return qs.get()
+
+        return None
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["bkash_form"] = self.get_bkash_form()
+        context["is_user_in_batch"] = self.check_if_user_is_in_batch(self.curr_object)
         return context
+
+
+@login_required
+def cancel_batch_join_request(request, batch_id):
+    user = request.user
+    qs = Batch.objects.filter(id=batch_id)
+    if not qs.exists():
+        print("Batch not Found")
+        return redirect("/")
+
+    batch_obj = qs.get()
+    qs = batch_obj.batchuser_set.filter(user=user)
+    if not qs.exists():
+        print("User is not in batch")
+        return redirect("/")
+
+    obj = qs.get()
+    obj.delete()
+    
+    print("Canceled Join Request")
+    return redirect("/")
+
