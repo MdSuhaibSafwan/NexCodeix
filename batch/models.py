@@ -80,6 +80,11 @@ class Batch(models.Model):
 class BatchUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
+    description = models.TextField(null=True)
+    verified_for_batch = models.BooleanField(default=False)
+
+    user_name = models.CharField(max_length=100, null=True)
+
     date_created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 
@@ -101,7 +106,7 @@ class BatchUser(models.Model):
         
 
 class BatchClass(models.Model):
-    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name="classes")
 
     day = models.CharField(max_length=4, null=True, blank=True)
     started = models.BooleanField(default=False)
