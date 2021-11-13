@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from nexcodeix.common import uuid_without_dash
+from common.models import BaseModel
 
 User = get_user_model()
 
@@ -77,7 +78,7 @@ class Batch(models.Model):
         
 
 
-class BatchUser(models.Model):
+class BatchUser(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
     description = models.TextField(null=True)
@@ -85,7 +86,6 @@ class BatchUser(models.Model):
 
     user_name = models.CharField(max_length=100, null=True)
 
-    date_created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -105,7 +105,7 @@ class BatchUser(models.Model):
         return super().save(*args, **kwargs)
         
 
-class BatchClass(models.Model):
+class BatchClass(BaseModel):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name="classes")
 
     day = models.CharField(max_length=4, null=True, blank=True)
@@ -114,11 +114,10 @@ class BatchClass(models.Model):
     time_starts = models.TimeField(null=True, blank=True)
     time_ends = models.TimeField(null=True, blank=True)
 
-    date_created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 
 
-class ClassMaterials(models.Model):
+class ClassMaterials(BaseModel):
     batch_class = models.OneToOneField(BatchClass, on_delete=models.CASCADE)
     video = models.FileField(upload_to="batch/class/video", null=True, blank=True)
     git_link = models.CharField(max_length=2040, blank=True, null=True)
