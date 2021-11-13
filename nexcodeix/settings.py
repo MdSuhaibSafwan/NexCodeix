@@ -113,6 +113,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGIN_URL = "/user/auth/login/"
+LOGIN_REDIRECT_URL = "/"
 
 LANGUAGE_CODE = 'en-us'
 
