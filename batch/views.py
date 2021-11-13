@@ -6,7 +6,8 @@ from .forms import BatchCreationForm, BatchUpdateForm, BatchUserForm
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, ValidationError
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django.contrib.auth.decorators import login_required
-from .helpers import get_next_batch_classes
+from .helpers import get_next_batch_classes, get_tomorrow_batch_classes, get_today_batch_classes
+from . import helpers
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -56,17 +57,48 @@ class BatchUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
 
-@login_required
-def next_batches_view(request):
-    user = request.user
-    qs = get_next_batch_classes(user=user)
+class UserClassesView(LoginRequiredMixin, ListView):
+    lst = ["next", "previous", "today", "tomorrow"]
+    template_name = "batch/user/user_batches_list.html"
 
-    context = {
-        "batches": qs
-    }
+    def get_queryset(self):
+        qs = get_next_batch_classes(user=self.request.user)
+        filter_param = self.request.GET.get("filter", None)
+        if filter_param is not None:    
+            param = self.filter_keyword(filter_param)
+            if param:
+                qs = self.get_queryset_on_param(param, qs)
 
-    return render(request, "batch/user/next_batches_page.html", context=context)
+        print("Inside GET QUERYSET ", qs)
+        return qs
 
+    def get_queryset_on_param(self, param, qs):
+
+        dictio = {
+            "next": self.get_next,
+            "previous": self.get_previous,
+            "today": get_today_batch_classes,
+            "tomorrow": get_tomorrow_batch_classes
+        }
+
+        print("Inside get_queryset_on_param ", dictio[param])
+        qs = dictio[param](qs=qs)
+        return qs
+
+    def get_next(self, qs):
+        return qs
+
+    def get_previous(self, qs):
+        return qs.filter(started=True)
+
+
+    def filter_keyword(self, param):
+        if param not in self.lst:
+            print("Provide Correct Param")
+            messages.error(self.request, "Please Provide the correct param")
+            return None
+
+        return param
 
 
 class JoinABatchView(LoginRequiredMixin, DetailView):
