@@ -30,12 +30,18 @@ def send_mail_to_user_account(sender, instance, created, **kwargs):
 @receiver(signal=post_save, sender=UserVerificationOTP)
 def create_task_for_expiry(sender, instance, created, **kwargs):
     if created:
-        qs = CrontabSchedule.objects.filter(minute=1)
-        if not qs.exists():
-            schedule = CrontabSchedule.objects.create(minute=1)
-        else:
-            schedule = qs.get()
+        tm = instance.date_created
+        minute = tm.minute
+        hour = tm.hour
+        day = tm.date().day
+        print("CREATING CRONTAB")
 
+        schedule = CrontabSchedule.objects.create(minute=minute+1, hour=hour, day_of_month=day)
+        dio = {
+            "token_obj": "1234"
+        }
         obj = PeriodicTask.objects.create(name=f"verification_{instance.id}", crontab=schedule, one_off=True,
-                                    task="user.tasks.make_verification_token_expired", args=f"({instance}, {instance.token})")
+                    task="user.tasks.make_verification_token_expired", kwargs=dio
+                                    )
+        print(obj)
         return obj

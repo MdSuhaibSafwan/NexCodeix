@@ -68,13 +68,12 @@ AUTH_USER_MODEL = 'user.User'
 
 WSGI_APPLICATION = 'nexcodeix.wsgi.application'
 
-# if DEBUG:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': BASE_DIR / 'db.sqlite3',
-#         }
-#     }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 # else:
 #     DATABASES = {
 #         'default': {
@@ -87,16 +86,16 @@ WSGI_APPLICATION = 'nexcodeix.wsgi.application'
 #         }
 #     }   
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get("DATABASE_NAME"),
-        'HOST': os.environ.get("DATABASE_HOST"),
-        'USER': os.environ.get("DATBASE_USER"),
-        'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
-        'PORT': int(os.environ.get("DATABASE_PORT")),
-    }
-}   
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.environ.get("DATABASE_NAME"),
+#         'HOST': os.environ.get("DATABASE_HOST"),
+#         'USER': os.environ.get("DATBASE_USER"),
+#         'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
+#         'PORT': int(os.environ.get("DATABASE_PORT")),
+#     }
+# }   
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -154,16 +153,9 @@ CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_BACKEND = 'django-db'
-
+CELERY_TIMEZONE = 'UTC'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 
-CELERY_BEAT_SCHEDULE = {
-    # "add_every_5_sec": {
-    #     "task": "user.tasks.add",
-    #     "schedule": 5,
-    #     'args': (5, 6)
-    # }
-}
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
