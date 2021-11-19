@@ -113,6 +113,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# EMAIL SETTINGS
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+
 # Bkash Settings 
 
 BKASH_APP_KEY = "// bkash app base url"
@@ -149,11 +158,11 @@ CELERY_RESULT_BACKEND = 'django-db'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 
 CELERY_BEAT_SCHEDULE = {
-    "add_every_5_sec": {
-        "task": "user.tasks.add",
-        "schedule": 5,
-        'args': (5, 6)
-    }
+    # "add_every_5_sec": {
+    #     "task": "user.tasks.add",
+    #     "schedule": 5,
+    #     'args': (5, 6)
+    # }
 }
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"

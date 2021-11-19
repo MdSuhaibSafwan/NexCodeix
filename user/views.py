@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth import get_user_model, authenticate, login, logout
+from django.contrib.auth import get_user_model, authenticate, login, logout, decorators
+from .models import UserVerificationOTP
 from .forms import UserForm, UserLoginForm
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, JsonResponse
+
 
 
 User = get_user_model()
@@ -11,10 +13,12 @@ User = get_user_model()
 
 def verify_user(request):
     query_id = request.GET.get("id")
-    # query_id = 2
     if not query_id:
         raise Http404("No Id is given to the url")
-    obj = get_object_or_404(User, id=query_id)
+    obj = get_object_or_404(UserVerificationOTP, token=query_id)
+    if obj.is_expired:
+        raise Http404("Token has been expired")
+    obj = obj.user
     if obj.verified:
         verified = True
     else:
@@ -26,6 +30,24 @@ def verify_user(request):
     }
     
     return render(request, "user/verified-template.html", context)
+
+
+@decorators.login_required
+def resend_another_verification_token(request):
+    user = request.user
+    verify_objects = UserVerificationOTP.objects
+    data = {}
+    qs = verify_objects.filter(user=user, expired=True)
+    if qs.exists():
+        obj = verify_objects.create(user=user)
+        data["token_created"] = True
+    else:
+        obj = qs.get()
+        data["token_created"] = False
+
+    data["token"] = str(obj.token)
+
+    return JsonResponse(data)
 
 
 class UserRegistrationView(CreateView):

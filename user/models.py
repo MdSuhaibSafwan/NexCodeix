@@ -1,7 +1,13 @@
+import secrets
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.exceptions import ValidationError
 from nexcodeix.common import uuid_without_dash
+from common.models import BaseModel
+
+
+def get_random_token(value=16):
+    return secrets.token_hex(value)
 
 
 class UserManager(BaseUserManager):
@@ -110,3 +116,23 @@ class User(AbstractBaseUser):
     def is_verified(self):
         return self.verified
 
+
+class UserVerificationOTP(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=False)
+    token = models.CharField(max_length=100)
+    expired = models.BooleanField(default=False)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.email + " Verification Token"
+
+    @property
+    def is_expired(self):
+        return self.expired
+
+    def save(self, *args, **kwargs):
+        token = self.token
+        if not token:
+            self.token = get_random_token(20)
+
+        return super().save(*args, **kwargs)
