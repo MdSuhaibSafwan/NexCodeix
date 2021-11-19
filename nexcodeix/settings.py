@@ -113,6 +113,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Bkash Settings 
+
+BKASH_APP_KEY = "// bkash app base url"
+BKASH_APP_SECRET = "// bkash app base url"
+BKASH_APP_USERNAME = "// bkash app base url"
+BKASH_APP_PASSWORD = "// bkash app base url"
+BKASH_APP_VERSION = "// bkash app base url"
+BKASH_APP_BASE_URL = "/user/bkash/"
+BKASH_APP_PAYMENT_TOKEN_GRANT_URL = 'user/bkash/checkout/token/grant'
+BKASH_APP_PAYMENT_CREATE_URL = '%s/%s/checkout/payment/create' % (BKASH_APP_BASE_URL, BKASH_APP_VERSION)
+BKASH_APP_PAYMENT_EXECUTE_URL = '%s/%s/checkout/payment/execute' % (BKASH_APP_BASE_URL, BKASH_APP_VERSION)
+
 LOGIN_URL = "/user/auth/login/"
 LOGIN_REDIRECT_URL = "/"
 
@@ -127,6 +139,23 @@ USE_L10N = True
 USE_TZ = True
 
 REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+# CELERY_TIMEZONE = 'Asia/Kolkata'
+
+CELERY_RESULT_BACKEND = 'django-db'
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
+
+# CELERY_BEAT_SCHEDULE = {
+#     "check_events_to_expire": {
+#         "task": "events.tasks.check_events_expiry",
+#         "schedule": 60 * 10,
+#     }
+# }
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 

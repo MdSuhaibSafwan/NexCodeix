@@ -1,15 +1,16 @@
 from __future__ import absolute_import, unicode_literals
-import os
 from celery import Celery
-from django.conf import settings
+import os
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "nexcodeix.settings")
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'nexcodeix.settings')
 
-REDIS_URL = settings.REDIS_URL
+# ## REDIS_URL
+# BASE_REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
 
-app = Celery("nexcodeix")
-
-app.config_from_object("django.conf:settings", namespace="CELERY")
-app.conf.broker_url = REDIS_URL
-
+app = Celery('nexcodeix')
+app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
+
+@app.task(bind=True)
+def debug_task(self):
+    print('Request: {0!r}'.format(self.request))
