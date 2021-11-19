@@ -37,11 +37,7 @@ def create_task_for_expiry(sender, instance, created, **kwargs):
         print("CREATING CRONTAB")
 
         schedule = CrontabSchedule.objects.create(minute=minute+1, hour=hour, day_of_month=day)
-        dio = {
-            "token_obj": "1234"
-        }
+
         obj = PeriodicTask.objects.create(name=f"verification_{instance.id}", crontab=schedule, one_off=True,
-                    task="user.tasks.make_verification_token_expired", kwargs=dio
-                                    )
-        print(obj)
+                    task="user.tasks.make_verification_token_expired", args=[instance, instance.token])
         return obj
