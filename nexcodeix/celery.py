@@ -4,9 +4,6 @@ import os
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'nexcodeix.settings')
 
-# ## REDIS_URL
-# BASE_REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
-
 app = Celery('nexcodeix')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()

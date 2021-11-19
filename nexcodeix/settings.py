@@ -144,18 +144,17 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
-# CELERY_TIMEZONE = 'Asia/Kolkata'
-
 CELERY_RESULT_BACKEND = 'django-db'
 
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 
-# CELERY_BEAT_SCHEDULE = {
-#     "check_events_to_expire": {
-#         "task": "events.tasks.check_events_expiry",
-#         "schedule": 60 * 10,
-#     }
-# }
+CELERY_BEAT_SCHEDULE = {
+    "add_every_5_sec": {
+        "task": "user.tasks.add",
+        "schedule": 5,
+        'args': (5, 6)
+    }
+}
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
