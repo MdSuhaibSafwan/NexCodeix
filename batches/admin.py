@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Batch, BatchClass, ClassMaterials
 
-# Register your models here.
+admin.site.register(Batch)
+admin.site.register(BatchClass)
+admin.site.register(ClassMaterials)

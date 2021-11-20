@@ -33,8 +33,8 @@ class Batch(models.Model):
     user = models.ManyToManyField(User, through="BatchUser", related_name="batches")
 
     started = models.BooleanField(default=False)
-    start_date = models.DateTimeField(null=True, blank=True)
-    end_date = models.DateTimeField(null=True, blank=True)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
 
     per_week = models.IntegerField(default=2)
     days = models.CharField(max_length=4, null=True, blank=True)
@@ -110,7 +110,7 @@ class BatchClass(BaseModel):
 
     day = models.CharField(max_length=4, null=True, blank=True)
     started = models.BooleanField(default=False)
-    start_date = models.DateTimeField(null=True, blank=True)
+    start_date = models.DateField(null=True, blank=True)
     time_starts = models.TimeField(null=True, blank=True)
     time_ends = models.TimeField(null=True, blank=True)
 

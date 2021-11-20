@@ -34,7 +34,6 @@ def create_task_for_expiry(sender, instance, created, **kwargs):
         minute = tm.minute
         hour = tm.hour
         day = tm.date().day
-        print("CREATING CRONTAB")
 
         schedule = CrontabSchedule.objects.create(minute=minute+1, hour=hour, day_of_month=day)
 

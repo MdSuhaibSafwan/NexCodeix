@@ -26,7 +26,7 @@ class BatchCreationForm(forms.ModelForm):
     class Meta:
         model = Batch
         # fields = "__all__"
-        fields = ["name", "batch_category", "per_week", "days"]
+        fields = ["name", "batch_category", "per_week", "days", "start_date", "end_date"]
 
     def clean_name(self):
         name = self.cleaned_data.get("name")
