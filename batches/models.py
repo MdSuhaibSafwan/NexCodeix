@@ -24,6 +24,16 @@ DAYS_LIST = {
     "Z": "Saturday",  # Z --> Saturday
 } 
 
+DAYS_NUMBER_LIST = {
+    "S": 6,
+    "M": 0,
+    "T": 1,
+    "W": 2,
+    "U": 3,  # U --> Thursday
+    "F": 4,
+    "Z": 5,  # Z --> Saturday
+} 
+
 
 class Batch(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid_without_dash)
