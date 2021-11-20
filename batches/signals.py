@@ -5,7 +5,10 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from datetime import timedelta
 
+from django_celery_beat.models import PeriodicTask, CrontabSchedule
+
 User = get_user_model()
+
 
 @receiver(signal=post_save, sender=Batch)
 def trigger_task_for_creating_batch_class(sender, instance, created, **kwargs):
@@ -36,3 +39,14 @@ def trigger_task_for_creating_batch_class(sender, instance, created, **kwargs):
                 break
 
 
+@receiver(signal=post_save, sender=BatchClass)
+def create_periodic_task_for_reminder_of_class(sender, instance, created, **kwargs):
+    if created:
+        date = instance.start_date
+        time = instance.time_starts
+        obj, cron_created = CrontabSchedule.objects.get_or_create(day_of_month=date.day, month_of_year=date.month, 
+                                                                    hour=time.hour-1)
+        obj = PeriodicTask.objects.create(name=f"batch_{instance.id}", crontab=obj, args=[instance, ],
+                                         task="batches.tasks.send_mail_for_class", one_off=True)
+        print("Periodic task Created for the batch ", obj)
+        return obj

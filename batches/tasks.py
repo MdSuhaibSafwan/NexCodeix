@@ -7,3 +7,8 @@ from .models import BatchClass
 def create_batch_class_task(**kwargs):
     batch = BatchClass.objects.create(**kwargs)
     return batch
+
+
+@shared_task
+def send_mail_for_class(batch_class):
+    print("Inside Task ", batch_class)
