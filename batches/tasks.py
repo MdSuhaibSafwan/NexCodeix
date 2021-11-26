@@ -29,3 +29,9 @@ def send_mail_for_class(batch_class):
 
     print("SENT MAILS FOR REMINDER OF BATCH CLASS TO ", recipient_list)
 
+
+@shared_task
+def delete_anouncement(anouncement_obj):
+    obj = anouncement_obj.delete()
+    print("Anouncement Deleted")
+    return obj

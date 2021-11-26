@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Batch, BatchClass, ClassMaterials, DAYS_LIST, DAYS_NUMBER_LIST
+from .models import Batch, BatchClass, ClassMaterials, BatchImportantAnouncement, DAYS_LIST, DAYS_NUMBER_LIST
 from .tasks import create_batch_class_task
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
@@ -63,4 +63,19 @@ def create_periodic_task_for_reminder_of_class(sender, instance, created, **kwar
         obj.crontab = crontab_obj
         obj.save()
         print("PERIODIC TASK CRONTAB UPDATED.")
+        return obj
+
+
+@receiver(signal=post_save, sender=BatchImportantAnouncement)
+def create_periodic_task_for_anouncement(sender, instance, created, **kwargs):
+    if created:
+        date = instance.end_date; hour = date.hour; minute = date.minute
+        date = date.date()
+        month = date.month; day = date.day
+        crontab_obj, cron_created = CrontabSchedule.objects.get_or_create(day_of_month=day, 
+                                    month_of_year=month, hour=hour, minute=minute)
+
+        obj = PeriodicTask.objects.create(name=f"del_anouncement_{instance.id}", crontab=crontab_obj, 
+                                args=[instance, ], task="batches.tasks.delete_anouncement", one_off=True)
+
         return obj

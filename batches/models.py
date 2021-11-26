@@ -1,3 +1,4 @@
+from datetime import timedelta
 import uuid
 from django.db import models
 from django.contrib.auth import get_user_model
@@ -86,6 +87,22 @@ class Batch(models.Model):
 
         return super().save(*args, **kwargs)
         
+
+
+class BatchImportantAnouncement(BaseModel):
+    batch = models.ForeignKey(Batch, on_delete=models.SET_NULL, null=True)
+    anouncement = models.TextField()
+    end_date = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return f"{self.batch} --> {self.anouncement}"
+
+    def save(self, *args, **kwargs):
+        end_date = self.end_date
+        if not end_date:
+            self.end_date = timezone.now() + timedelta(days=1)
+
+        return super().save(*args, **kwargs)
 
 
 class BatchUser(BaseModel):
