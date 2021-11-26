@@ -8,10 +8,10 @@ from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django.contrib.auth.decorators import login_required
 from .helpers import get_next_batch_classes, get_tomorrow_batch_classes, get_today_batch_classes
 from . import helpers
-from django.contrib.auth.mixins import LoginRequiredMixin
+from .mixins import LoginRequiredAndVerificationMixin
 
 
-class BatchListView(ListView):
+class BatchListView(LoginRequiredAndVerificationMixin, ListView):
     template_name = "batch/staff/batch-list.html"
     context_object_name = "batches"
 
@@ -20,7 +20,7 @@ class BatchListView(ListView):
         return qs
 
 
-class BatchCreateView(LoginRequiredMixin, CreateView):
+class BatchCreateView(LoginRequiredAndVerificationMixin, CreateView):
     template_name = "batch/staff/batch-create.html"
     form_class = BatchCreationForm
     success_url = "/"
@@ -32,7 +32,7 @@ class BatchCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class BatchUpdateView(LoginRequiredMixin, UpdateView):
+class BatchUpdateView(LoginRequiredAndVerificationMixin, UpdateView):
     template_name = "batch/staff/batch-create.html"
     form_class = BatchUpdateForm
     lookup_url_kwarg = "id"
@@ -57,7 +57,7 @@ class BatchUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
 
-class BatchDetailView(LoginRequiredMixin, DetailView):
+class BatchDetailView(LoginRequiredAndVerificationMixin, DetailView):
     template_name = "batch/staff/batch-create.html"
     lookup_url_kwarg = "id"
 
@@ -83,7 +83,7 @@ class BatchDetailView(LoginRequiredMixin, DetailView):
     
 
 
-class UserClassesView(LoginRequiredMixin, ListView):
+class UserClassesView(LoginRequiredAndVerificationMixin, ListView):
     lst = ["next", "previous", "today", "tomorrow"]
     template_name = "batch/user/user_batches_list.html"
 
@@ -127,7 +127,7 @@ class UserClassesView(LoginRequiredMixin, ListView):
         return param
 
 
-class JoinABatchView(LoginRequiredMixin, DetailView):
+class JoinABatchView(LoginRequiredAndVerificationMixin, DetailView):
     template_name = "batch/user/join_batch.html"
     lookup_url_kwarg = "id"
 
