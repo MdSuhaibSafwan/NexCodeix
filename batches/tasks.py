@@ -22,7 +22,7 @@ def send_mail_for_class(batch_class):
 
     send_mail(
         subject="Reminder of Class",
-        message="It is to remind you that class will be held exactly after 1 day",
+        message="It is to remind you that class will be held exactly after 1 Hour",
         from_email=settings.EMAIL_HOST_USER,
         recipient_list=recipient_list,
     )

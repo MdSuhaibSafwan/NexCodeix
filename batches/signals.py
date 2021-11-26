@@ -1,8 +1,9 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 from .models import Batch, BatchClass, ClassMaterials, DAYS_LIST, DAYS_NUMBER_LIST
 from .tasks import create_batch_class_task
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from datetime import timedelta
 
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
@@ -41,12 +42,25 @@ def trigger_task_for_creating_batch_class(sender, instance, created, **kwargs):
 
 @receiver(signal=post_save, sender=BatchClass)
 def create_periodic_task_for_reminder_of_class(sender, instance, created, **kwargs):
+    date = instance.start_date
+    time = instance.time_starts
     if created:
-        date = instance.start_date
-        time = instance.time_starts
-        obj, cron_created = CrontabSchedule.objects.get_or_create(day_of_month=date.day, month_of_year=date.month, 
+        crontab_obj, cron_created = CrontabSchedule.objects.get_or_create(day_of_month=date.day, month_of_year=date.month, 
                                                                     hour=time.hour-1)
-        obj = PeriodicTask.objects.create(name=f"batch_{instance.id}", crontab=obj, args=[instance, ],
+        obj = PeriodicTask.objects.create(name=f"batch_{instance.id}", crontab=crontab_obj, args=[instance, ],
                                          task="batches.tasks.send_mail_for_class", one_off=True)
         print("Periodic task Created for the batch ", obj)
+        return obj
+    
+    else:
+        crontab_obj, cron_created = CrontabSchedule.objects.get_or_create(day_of_month=date.day, month_of_year=date.month, 
+                                                                    hour=time.hour-1)        
+        try:
+            obj = PeriodicTask.objects.get(name=f"batch_{instance.id}")
+        except ObjectDoesNotExist:
+            return
+
+        obj.crontab = crontab_obj
+        obj.save()
+        print("PERIODIC TASK CRONTAB UPDATED.")
         return obj
