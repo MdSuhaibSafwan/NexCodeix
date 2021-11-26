@@ -5,10 +5,9 @@ from .models import Batch, BatchUser
 from .forms import BatchCreationForm, BatchUpdateForm, BatchUserForm
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, ValidationError
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
-from django.contrib.auth.decorators import login_required
 from .helpers import get_next_batch_classes, get_tomorrow_batch_classes, get_today_batch_classes
 from . import helpers
-from .mixins import LoginRequiredAndVerificationMixin
+from .mixins import LoginRequiredAndVerificationMixin,login_and_verification_required
 
 
 class BatchListView(LoginRequiredAndVerificationMixin, ListView):
@@ -159,7 +158,7 @@ class JoinABatchView(LoginRequiredAndVerificationMixin, DetailView):
         return context
 
 
-@login_required
+@login_and_verification_required
 def cancel_batch_join_request(request, batch_id):
     user = request.user
     qs = Batch.objects.filter(id=batch_id)
