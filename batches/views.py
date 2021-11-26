@@ -57,6 +57,32 @@ class BatchUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
 
+class BatchDetailView(LoginRequiredMixin, DetailView):
+    template_name = "batch/staff/batch-create.html"
+    lookup_url_kwarg = "id"
+
+    def get_object(self):
+        batch_id = self.kwargs.get(self.lookup_url_kwarg)
+        obj = get_object_or_404(Batch, id=batch_id)
+        form = self.get_form()
+        form.instance.update = True
+        print("Instance update set to True", form)
+        return obj
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def post(self, *args, **kwargs):
+        anouncement = self.request.GET.get("anouncement_field")
+        context = self.get_context_data(request=self.request, user=self.request.user)
+        if anouncement:
+            print("Creating Anouncement for ", anouncement)
+
+        return render(self.request, self.template_name, context=context)
+    
+
+
 class UserClassesView(LoginRequiredMixin, ListView):
     lst = ["next", "previous", "today", "tomorrow"]
     template_name = "batch/user/user_batches_list.html"
