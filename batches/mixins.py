@@ -29,4 +29,6 @@ def login_and_verification_required(function):
             messages.warning(request, "User is not Verified")
             return redirect("/")
 
-        return True
+        return function(request, *args, **kwargs)
+
+    return wrap

@@ -8,7 +8,7 @@ urlpatterns = [
 
 
     path("join/<id>/", views.JoinABatchView.as_view(), name="join_a_batch_view"),
-    path("joining/cancel/<batch_id>/", views.cancel_batch_join_request, name="cancel_batch_joining"),
+    path("joining/cancel/<batch_id>/", views.cancel_batch_join_request, name="cancels_batch_joining"),
 
     path("user/classes/", views.UserClassesView.as_view(), name="user_classes"),
 
