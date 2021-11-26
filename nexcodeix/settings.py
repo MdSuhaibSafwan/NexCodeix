@@ -26,8 +26,10 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'telegram.apps.TelegramConfig',
 
-    'crispy_forms',
     'rest_framework',
+    'rest_framework.authtoken',
+
+    'crispy_forms',
     'bkash',
 
     'django_celery_beat',
