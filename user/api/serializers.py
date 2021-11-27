@@ -39,12 +39,9 @@ class UserLoginSerializer(serializers.Serializer):
         email = attrs.get("email")
 
         user = authenticate(email=email, password=password)
-        if user:
-            request = self.context.get("request")
-            if not request:
-                raise serializers.ValidationError("Request Access denied")
-
-            login(request, user)
+        if not user:
+            raise serializers.ValidationError("Email and Password did not match")
+        self.user = user
 
         return super().validate(attrs=attrs)
 
