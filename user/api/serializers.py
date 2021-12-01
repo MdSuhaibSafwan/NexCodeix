@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth import login, logout, authenticate
+from ..models import UserVerificationOTP
 
 User = get_user_model()
 
@@ -40,7 +41,12 @@ class UserLoginSerializer(serializers.Serializer):
 
         user = authenticate(email=email, password=password)
         if not user:
-            raise serializers.ValidationError("Email and Password did not match")
+            raise serializers.ValidationError("Email and Password did not match.")
+
+        if not user.is_verified:
+            UserVerificationOTP.objects.get_or_create(user=user, expired=False)
+            raise serializers.ValidationError("An Email has been sent to you please verify that one.")
+
         self.user = user
 
         return super().validate(attrs=attrs)

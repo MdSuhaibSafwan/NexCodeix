@@ -17,7 +17,7 @@ def send_mail_to_user_account(sender, instance, created, **kwargs):
         obj = UserVerificationOTP.objects.create(user=instance)
         # render_to_string("", context={"verification_token": str(obj.token)})
         print("SENDING VERIFICATION MAIL TO NEW USER")
-        message = f"Please Verify Your Account at https://nexcodeix.herokuapp.com/user/verify/?id={obj.token}"
+        message = f"Please Verify Your Account at {settings.APP_URL}/user/verify/?id={obj.token}"
         send_mail(
             subject="Verify Account",
             message=message,
@@ -35,7 +35,7 @@ def create_task_for_expiry(sender, instance, created, **kwargs):
         hour = tm.hour
         day = tm.date().day
 
-        schedule = CrontabSchedule.objects.create(minute=minute+1, hour=hour, day_of_month=day)
+        schedule = CrontabSchedule.objects.create(minute=minute+5, hour=hour, day_of_month=day)
 
         obj = PeriodicTask.objects.create(name=f"verification_{instance.id}", crontab=schedule, one_off=True,
                     task="user.tasks.make_verification_token_expired", args=[instance, instance.token])

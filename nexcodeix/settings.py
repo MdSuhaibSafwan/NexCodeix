@@ -115,6 +115,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+APP_URL = os.environ.get("APP_URL", "https://nexcodeix.herokuapp.com")
+
 # EMAIL SETTINGS
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
