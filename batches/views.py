@@ -1,4 +1,5 @@
-from django.http.response import HttpResponseRedirect
+import json
+from django.http.response import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.contrib.auth import get_user_model
@@ -185,7 +186,8 @@ def cancel_batch_join_request(request, batch_id):
 
 class ClassDetailView(DetailView):
     template_name = "batch/user/class_detail.html"
-
+    view_url = "/batch/user/class/view/"
+    
     def get_queryset(self):
         return Batch.objects.none()
 
@@ -194,13 +196,25 @@ class ClassDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["view_url"] = self.view_url
+        print(context)
 
         return context
 
-    def post(self, request, *args, **kwargs):
+    def post(self, *args, **kwargs):
         print("Creating")
         self.object = self.get_object()
-        context = super().get_context_data(**kwargs)
-        print(context)
-        return HttpResponseRedirect(reverse("class_detail_view"))
+    
+        data = json.loads(self.request.body)
+        is_ajax = data.get("is_ajax")
+        is_joining = data.get("joining")
+        
+        if is_ajax:
+            print("Returning Json Response")
+            resp_data = {
+                "status": "ok"
+            }
+            return JsonResponse(resp_data)
+
+        return HttpResponseRedirect(self.view_url)
 
