@@ -130,6 +130,10 @@ class BatchUser(BaseModel):
     def save(self, *args, **kwargs):
         self.validate_user()
         return super().save(*args, **kwargs)
+
+    @property
+    def is_verified(self):
+        return self.verified_for_batch
         
 
 class BatchClass(BaseModel):
@@ -153,3 +157,19 @@ class ClassMaterials(BaseModel):
     def __str__(self):
         return self.batch_class.batch.name + " Materials"
 
+
+class ClassJoinedUser(BaseModel):
+    STATUS = (
+        ("J", "JOINED"),
+        ("P", "PENDING"),
+        ("N", "NOT JOINED")
+    )
+    batch_class = models.ForeignKey(BatchClass, on_delete=models.CASCADE, related_name="joined_users")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    status = models.CharField(max_length=1, choices=STATUS, default="P")
+
+    class Meta:
+        unique_together = ["batch_class", "user"]
+
+    def __str__(self):
+        return self.user.email + " | Joined"

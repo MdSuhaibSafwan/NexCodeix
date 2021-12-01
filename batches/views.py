@@ -4,10 +4,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib import messages
-from rest_framework.relations import method_overridden
-from .models import Batch, BatchUser
+from .models import Batch, BatchClass, BatchUser, ClassJoinedUser
 from .forms import BatchCreationForm, BatchUpdateForm, BatchUserForm
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, ValidationError
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, PermissionDenied, ValidationError
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from .helpers import get_next_batch_classes, get_tomorrow_batch_classes, get_today_batch_classes
 from . import helpers
@@ -186,34 +185,60 @@ def cancel_batch_join_request(request, batch_id):
 
 class ClassDetailView(DetailView):
     template_name = "batch/user/class_detail.html"
-    view_url = "/batch/user/class/view/"
+
+    lookup_url_kwarg = "class_id"
     
     def get_queryset(self):
-        return Batch.objects.none()
+        return BatchClass.objects.none()
 
     def get_object(self):
-        return self.request.user
+        obj = get_object_or_404(BatchClass, id=self.kwargs.get(self.lookup_url_kwarg))
+        return obj
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["view_url"] = self.view_url
-        print(context)
+        context["view_url"] = f"/batch/user/class/{self.kwargs.get(self.lookup_url_kwarg)}/view/"
 
         return context
 
     def post(self, *args, **kwargs):
-        print("Creating")
-        self.object = self.get_object()
-    
+        batch_class_obj = self.get_object()
+        self.object = batch_class_obj
+        curr_user = self.request.user
         data = json.loads(self.request.body)
-        is_ajax = data.get("is_ajax")
-        is_joining = data.get("joining")
         
+        is_ajax = data.get("is_ajax")
+        is_joining_batch = data.get("joining")
+
+        self.view_url = f"/batch/user/class/{self.kwargs.get(self.lookup_url_kwarg)}/view/"
+
+        resp_data = {}
+
+        if is_joining_batch:
+            batch = batch_class_obj.batch
+            qs = batch.batchuser_set.filter(user=curr_user)
+            print("BATCH QS --> ", qs)
+        
+            if not qs.exists():
+                resp_data["joining_status"] = "Not in this Batch"
+                return JsonResponse(resp_data)
+
+            # batch_user = qs.get()
+            # if not batch_user.is_verified:
+            #     resp_data["joining_status"] = "Not verified for this Batch"
+            #     return JsonResponse(resp_data)
+            try:
+                class_joined_obj = ClassJoinedUser.objects.create(batch_class=batch_class_obj, user=curr_user, status="P")
+            except:
+                return JsonResponse(resp_data)
+
+            resp_data["batch_class_id"] = str(class_joined_obj.id)
+            resp_data["user"] = curr_user.email
+            resp_data["joining_status"] = "pending"
+
         if is_ajax:
-            print("Returning Json Response")
-            resp_data = {
-                "status": "ok"
-            }
+            print("RETURNING JSON RESPONSE")
+            resp_data["status"] = "ok"
             return JsonResponse(resp_data)
 
         return HttpResponseRedirect(self.view_url)

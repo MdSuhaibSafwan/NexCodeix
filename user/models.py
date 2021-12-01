@@ -80,6 +80,9 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELD = [] # Can Explicitely set that but email, USERNAME_FIELD and password are set by default
 
+    def __str__(self):
+        return self.email
+
     def get_full_name(self):
         return f"{self.first_name} {self.middle_name} {self.last_name}"
 

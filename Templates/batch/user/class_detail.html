@@ -36,6 +36,7 @@
             event.preventDefault();
             var val = form.getElementsByTagName("input")[1].value;
             var url = "{{ view_url }}";
+            console.log(url);
             fetch(url, {
                 "method": "POST",
                 "headers": {
