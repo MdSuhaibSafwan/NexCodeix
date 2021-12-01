@@ -11,5 +11,6 @@ urlpatterns = [
     path("joining/cancel/<batch_id>/", views.cancel_batch_join_request, name="cancels_batch_joining"),
 
     path("user/classes/", views.UserClassesView.as_view(), name="user_classes"),
+    path("user/class/view/", views.ClassDetailView.as_view(), name="class_detail_view"),
 
 ]

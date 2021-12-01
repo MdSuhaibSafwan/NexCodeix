@@ -1,6 +1,9 @@
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib import messages
+from rest_framework.relations import method_overridden
 from .models import Batch, BatchUser
 from .forms import BatchCreationForm, BatchUpdateForm, BatchUserForm
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, ValidationError
@@ -8,6 +11,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from .helpers import get_next_batch_classes, get_tomorrow_batch_classes, get_today_batch_classes
 from . import helpers
 from .mixins import LoginRequiredAndVerificationMixin,login_and_verification_required
+
 
 
 class BatchListView(LoginRequiredAndVerificationMixin, ListView):
@@ -177,4 +181,26 @@ def cancel_batch_join_request(request, batch_id):
     
     print("Canceled Join Request")
     return redirect("/")
+
+
+class ClassDetailView(DetailView):
+    template_name = "batch/user/class_detail.html"
+
+    def get_queryset(self):
+        return Batch.objects.none()
+
+    def get_object(self):
+        return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        print("Creating")
+        self.object = self.get_object()
+        context = super().get_context_data(**kwargs)
+        print(context)
+        return HttpResponseRedirect(reverse("class_detail_view"))
 
