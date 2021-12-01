@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth import login, logout, authenticate
 from ..models import UserVerificationOTP
+from batches.helpers import get_next_batch_classes
 
 User = get_user_model()
 
@@ -61,4 +62,16 @@ class UserLoginSerializer(serializers.Serializer):
     class Meta:
         fields = ["email", "password",]
 
+
+class UserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(read_only=True)
+    next_batches_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ["email", "first_name", "last_name", "phone", "present_address", "permanent_address", "next_batches_count"]
+
+    def get_next_batches_count(self, serializer):
+        classes = get_next_batch_classes(serializer)
+        return classes.count()
 

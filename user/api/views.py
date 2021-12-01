@@ -1,7 +1,7 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
-from rest_framework.decorators import api_view
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
+from rest_framework.decorators import api_view, permission_classes
 from . import serializers
-from . import helpers
+from . import permissions
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework import status
@@ -46,3 +46,12 @@ def registration_api_view(request):
     status_data["email"] = str(user.email)
 
     return Response(status_data, status=status.HTTP_200_OK)
+
+
+class UserProfileAPIView(RetrieveAPIView):
+    serializer_class = serializers.UserSerializer
+    permission_classes = [permissions.IsAuthenticatedAndVerified, ]
+
+    def get_object(self):
+        return self.request.user
+
