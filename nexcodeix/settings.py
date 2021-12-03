@@ -14,6 +14,8 @@ DEBUG = os.environ.get("DEBUG") == "True"
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", "nexcodeix.herokuapp.com"]
 
 INSTALLED_APPS = [
+    "channels",
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -69,6 +71,7 @@ TEMPLATES = [
 AUTH_USER_MODEL = 'user.User'
 
 WSGI_APPLICATION = 'nexcodeix.wsgi.application'
+ASGI_APPLICATION = "main.channel_routers.application"
 
 if DEBUG:
     DATABASES = {
