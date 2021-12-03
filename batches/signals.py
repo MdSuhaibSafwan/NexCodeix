@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Batch, BatchClass, ClassMaterials, BatchImportantAnouncement, DAYS_LIST, DAYS_NUMBER_LIST
+from .models import Batch, BatchClass, ClassMaterials, BatchImportantAnouncement, ClassJoinedUser, DAYS_LIST, DAYS_NUMBER_LIST
 from .tasks import create_batch_class_task
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
@@ -8,8 +8,11 @@ from datetime import timedelta
 
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
 
-User = get_user_model()
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
+User = get_user_model()
+channel_layer = get_channel_layer()
 
 @receiver(signal=post_save, sender=Batch)
 def trigger_task_for_creating_batch_class(sender, instance, created, **kwargs):
@@ -79,3 +82,21 @@ def create_periodic_task_for_anouncement(sender, instance, created, **kwargs):
                                 args=[instance, ], task="batches.tasks.delete_anouncement", one_off=True)
 
         return obj
+
+
+@receiver(signal=post_save, sender=ClassJoinedUser)
+def send_channel_layer_for_class_joined_user(sender, instance, created, **kwargs):
+    if created:
+        data = {}
+        data["user"] = instance.user.email
+        class_id = str(instance.batch_class.id)
+        print(class_id)
+
+        async_to_sync(channel_layer.group_send)(
+            class_id, 
+            {
+                "type": "send.notification",
+                "text": data
+            }
+        )
+

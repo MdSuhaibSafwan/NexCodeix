@@ -164,6 +164,12 @@ CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TIMEZONE = 'UTC'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    }
+}
+
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 

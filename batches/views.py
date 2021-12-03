@@ -11,6 +11,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from .helpers import get_next_batch_classes, get_tomorrow_batch_classes, get_today_batch_classes
 from . import helpers
 from .mixins import LoginRequiredAndVerificationMixin,login_and_verification_required
+from django.db.utils import IntegrityError
 
 
 
@@ -229,7 +230,8 @@ class ClassDetailView(DetailView):
             #     return JsonResponse(resp_data)
             try:
                 class_joined_obj = ClassJoinedUser.objects.create(batch_class=batch_class_obj, user=curr_user, status="P")
-            except:
+            except IntegrityError as e:
+                print(e)
                 return JsonResponse(resp_data)
 
             resp_data["batch_class_id"] = str(class_joined_obj.id)

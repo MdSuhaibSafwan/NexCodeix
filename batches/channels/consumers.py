@@ -4,7 +4,7 @@ from channels.db import database_sync_to_async
 from .utils import get_batch, get_batch_class, get_user_by_token
 
 
-class BatchConsumer(AsyncConsumer):
+class ClassConsumer(AsyncConsumer):
 
     async def websocket_connect(self, event):
         print("CONNECTED TO WEBSOCKET ", event)
@@ -19,19 +19,7 @@ class BatchConsumer(AsyncConsumer):
             split2 = i.split("=")
             dictio[split2[0]] = split2[-1]
 
-        print(dictio)
-        
-        return 
-        token = query_string.get("token")
-        if token is None:
-            await self.send({
-                "type": "websocket.close"
-            })
-            return False
-        
-        # batch_id = query_string.get("batch_id")        
-        # batch = await get_batch(batch_id)
-
+        token = dictio.get("token")
         user = await get_user_by_token(token)
         if user is None:
             await self.send({
@@ -39,12 +27,33 @@ class BatchConsumer(AsyncConsumer):
             })
             return False
 
+        class_id = dictio.get("class_id")
+        class_obj = await get_batch_class(class_id)
+        if class_obj is None:
+            await self.send({
+                "type": "websocket.close"
+            })
+            return False
+        
         self.scope["user"] = user
 
-
+        room = str(class_obj.id)
+        print(room)
+        self.chat_room = room
+        await self.channel_layer.group_add(
+            self.chat_room,
+            self.channel_name,
+        )
 
     async def websocket_receive(self, event):
         print("RECEIVED FROM WEBSOCKET ", event)
+
+    async def send_notification(self, event):
+        data = (event["text"])
+        await self.send({
+            "type": "websocket.send",
+            "text": json.dumps(data)
+        })
 
     async def websocket_disconnect(self, event):
         print("DIS-CONNECTED TO WEBSOCKET ", event)

@@ -11,11 +11,15 @@ def get_batch(batch_id):
 
 @sync_to_async
 def get_batch_class(class_id):
+    if class_id is None:
+        return None
     return get_batch_class_by_id_or_None(class_id)
 
 
 @sync_to_async
 def get_user_by_token(token):
+    if token is None:
+        return None
     try:
         obj = Token.objects.get(key=token)
     except ObjectDoesNotExist:
