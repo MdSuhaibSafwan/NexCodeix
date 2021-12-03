@@ -3,7 +3,7 @@ from .models import Batch, BatchClass
 from django.db.models import Q
 from django.utils import timezone
 from datetime import timedelta
-from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import ImproperlyConfigured, ObjectDoesNotExist
 
 
 User = get_user_model()
@@ -51,3 +51,19 @@ def get_today_batch_classes(qs=None, user=None):
     qs = get_next_batch_classes(user)
     qs = qs.filter(start_date__date=time_now.date())
     return qs
+
+
+def get_batch_by_id_or_None(batch_id):
+    try:
+        obj = Batch.objects.get(id=batch_id)
+    except ObjectDoesNotExist:
+        return None
+    return obj
+
+
+def get_batch_class_by_id_or_None(class_id):
+    try:
+        obj = BatchClass.objects.get(id=class_id)
+    except ObjectDoesNotExist:
+        return None
+    return obj
