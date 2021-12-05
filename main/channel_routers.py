@@ -11,7 +11,7 @@ application = ProtocolTypeRouter({
     "websocket": AuthMiddlewareStack(
         URLRouter(
             [
-                path("batch/room/", ClassConsumer.as_asgi(), ),
+                path("batch/class/room/", ClassConsumer.as_asgi(), ),
             ]
         )
     )

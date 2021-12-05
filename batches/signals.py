@@ -89,7 +89,7 @@ def send_channel_layer_for_class_joined_user(sender, instance, created, **kwargs
     if created:
         data = {}
         data["user"] = instance.user.email
-        class_id = str(instance.batch_class.id)
+        class_id = "class_room_" + str(instance.batch_class.id)
         print(class_id)
 
         async_to_sync(channel_layer.group_send)(

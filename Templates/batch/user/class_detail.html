@@ -56,6 +56,36 @@
             }) 
         });
 
+    </script>
+
+    <script>
+        var currUserToken = "{{ user_token }}";
+        var classId = "{{ class_obj.id }}";
+        console.log(currUserToken, classId);
+        var loc = location;
+        console.log(loc);
+        var ws = "ws:";
+        if (loc.protocol == "https:") ws = "wss:"
+        var url = `${ws}//${loc.host}/batch/class/room/?token=${currUserToken}&class_id=${classId}`;
+        console.log(url);
+
+        var socket = new WebSocket(url);
+
+        socket.onopen = (event) =>{
+            console.log(event);
+        };
+
+        socket.onmessage = (event) =>{
+            console.log(event);
+        };
+
+        socket.onerror = (event) =>{
+            console.log(event);
+        };
+
+        socket.onclose = (event) =>{
+            console.log(event);
+        };
 
     </script>
 

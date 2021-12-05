@@ -37,7 +37,7 @@ class ClassConsumer(AsyncConsumer):
         
         self.scope["user"] = user
 
-        room = str(class_obj.id)
+        room = "class_room_" + str(class_obj.id)
         print(room)
         self.chat_room = room
         await self.channel_layer.group_add(

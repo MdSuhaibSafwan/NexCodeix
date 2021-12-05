@@ -12,7 +12,7 @@ from .helpers import get_next_batch_classes, get_tomorrow_batch_classes, get_tod
 from . import helpers
 from .mixins import LoginRequiredAndVerificationMixin,login_and_verification_required
 from django.db.utils import IntegrityError
-
+from rest_framework.authtoken.models import Token
 
 
 class BatchListView(LoginRequiredAndVerificationMixin, ListView):
@@ -186,7 +186,7 @@ def cancel_batch_join_request(request, batch_id):
 
 class ClassDetailView(DetailView):
     template_name = "batch/user/class_detail.html"
-
+    context_object_name = "class_obj"
     lookup_url_kwarg = "class_id"
     
     def get_queryset(self):
@@ -194,12 +194,18 @@ class ClassDetailView(DetailView):
 
     def get_object(self):
         obj = get_object_or_404(BatchClass, id=self.kwargs.get(self.lookup_url_kwarg))
+        self.object = obj
         return obj
+
+    def get_user_token(self):
+        obj, created = Token.objects.get_or_create(user=self.request.user)
+        return obj.key
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["view_url"] = f"/batch/user/class/{self.kwargs.get(self.lookup_url_kwarg)}/view/"
-
+        context["user_token"] = str(self.get_user_token())
+    
         return context
 
     def post(self, *args, **kwargs):
