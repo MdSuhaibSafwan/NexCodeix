@@ -185,7 +185,7 @@ def cancel_batch_join_request(request, batch_id):
 
 
 class ClassDetailView(DetailView):
-    template_name = "batch/user/class_detail.html"
+    template_name = "batch/user/user_class_detail.html"
     context_object_name = "class_obj"
     lookup_url_kwarg = "class_id"
     
@@ -201,10 +201,20 @@ class ClassDetailView(DetailView):
         obj, created = Token.objects.get_or_create(user=self.request.user)
         return obj.key
 
+    def is_user_batch_conductor(self):
+        batch_obj = self.object.batch
+        curr_user = self.request.user
+        if curr_user == batch_obj.conductor:
+            self.template_name = "batch/user/conductor_class_detail.html"
+            return True
+
+        return False
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["view_url"] = f"/batch/user/class/{self.kwargs.get(self.lookup_url_kwarg)}/view/"
         context["user_token"] = str(self.get_user_token())
+        context["batch_conductor"] = self.is_user_batch_conductor()
     
         return context
 

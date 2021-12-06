@@ -38,6 +38,7 @@ DAYS_NUMBER_LIST = {
 
 class Batch(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid_without_dash)
+    conductor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=50)
     batch_category = models.CharField(max_length=2, choices=BATCH_CATEGORY)
 

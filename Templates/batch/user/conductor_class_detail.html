@@ -1,0 +1,20 @@
+{% extends "Components/base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+{% endblock content %}
+
+
+{% block script %}
+    <script>
+        const view_url = "{{ view_url }}";
+        const user_token = "{{ user_token }}";
+        const class_obj_id = "{{ class_obj.id }}";
+    </script>
+
+    <script src="{% static 'js/class_conductor.js' %}"></script>
+
+
+{% endblock script %}
