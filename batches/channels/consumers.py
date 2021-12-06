@@ -1,7 +1,7 @@
 import json
 from channels.consumer import AsyncConsumer
 from channels.db import database_sync_to_async
-from .utils import get_batch, get_batch_class, get_user_by_token
+from .utils import get_batch, get_batch_class, get_user_by_token, get_user_by_id
 
 
 class ClassConsumer(AsyncConsumer):
@@ -49,7 +49,8 @@ class ClassConsumer(AsyncConsumer):
         print("RECEIVED FROM WEBSOCKET ", event)
 
     async def send_notification(self, event):
-        data = (event["text"])
+        data = event["text"]
+
         await self.send({
             "type": "websocket.send",
             "text": json.dumps(data)

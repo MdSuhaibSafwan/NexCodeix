@@ -75,3 +75,11 @@ class UserSerializer(serializers.ModelSerializer):
         classes = get_next_batch_classes(serializer)
         return classes.count()
 
+
+class UserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        # fields = "__all__"
+        exclude = ["active", "date_created", "last_updated", "last_login", "password", "superuser", "staff"]
+

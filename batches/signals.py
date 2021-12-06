@@ -5,6 +5,7 @@ from .tasks import create_batch_class_task
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 from datetime import timedelta
+from user.api.serializers import UserProfileSerializer
 
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
 
@@ -88,9 +89,12 @@ def create_periodic_task_for_anouncement(sender, instance, created, **kwargs):
 def send_channel_layer_for_class_joined_user(sender, instance, created, **kwargs):
     if created:
         data = {}
-        data["user"] = instance.user.email
+        user_data = UserProfileSerializer(instance.user).data
+        
+        user_data["id"] = str(user_data["id"])
+        data["user"] = user_data
+        
         class_id = "class_room_" + str(instance.batch_class.id)
-        print(class_id)
 
         async_to_sync(channel_layer.group_send)(
             class_id, 

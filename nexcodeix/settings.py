@@ -174,7 +174,7 @@ CHANNEL_LAYERS = {
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 STATIC_DIR1 = os.path.join(BASE_DIR, "static")
-STATIC_DIRS = [
+STATICFILES_DIRS = [
     STATIC_DIR1, 
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
