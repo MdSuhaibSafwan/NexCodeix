@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = os.environ.get("DEBUG") == "True"
-DEVELOPMENT_MODE = os.environ.get("DEVELOPMENT_MODE") == "True"
+HOSTED = os.environ.get("HOSTED") == "True"
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", "nexcodeix.herokuapp.com"]
 
@@ -74,7 +74,7 @@ AUTH_USER_MODEL = 'user.User'
 WSGI_APPLICATION = 'nexcodeix.wsgi.application'
 ASGI_APPLICATION = "main.channel_routers.application"
 
-if DEBUG:
+if not HOSTED:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
