@@ -1,5 +1,5 @@
 import json
-from django.http.response import HttpResponseRedirect, JsonResponse
+from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.contrib.auth import get_user_model
@@ -261,3 +261,27 @@ class ClassDetailView(DetailView):
 
         return HttpResponseRedirect(self.view_url)
 
+
+
+def make_user_accepted_to_class(request, _id):
+    try:
+        obj = ClassJoinedUser.objects.get(id=_id)
+    except ObjectDoesNotExist:
+        return JsonResponse({"Id not Found"})
+    except ValidationError as e:
+        e = str(e)
+        return JsonResponse(e, safe=False)
+
+    obj.status = "J"
+    
+    url_type = request.GET.get("type", None)
+    if url_type and (str(url_type).lower() == "reject"):
+        obj.status = "N"
+
+    obj.save()
+
+    data = {
+        "user": dict(ClassJoinedUser.STATUS)[obj.status],
+    }
+
+    return JsonResponse(data)

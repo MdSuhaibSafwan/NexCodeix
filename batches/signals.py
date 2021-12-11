@@ -89,6 +89,8 @@ def create_periodic_task_for_anouncement(sender, instance, created, **kwargs):
 def send_channel_layer_for_class_joined_user(sender, instance, created, **kwargs):
     if created:
         data = {}
+        data["id"] = str(instance.id)
+        data["msg_type"] = "SRJ"  # Student Requested Joining
         user_data = UserProfileSerializer(instance.user).data
         
         user_data["id"] = str(user_data["id"])

@@ -167,7 +167,7 @@ class ClassJoinedUser(BaseModel):
     )
     batch_class = models.ForeignKey(BatchClass, on_delete=models.CASCADE, related_name="joined_users")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    status = models.CharField(max_length=1, choices=STATUS, default="P")
+    status = models.CharField(max_length=1, choices=STATUS, default="N")
 
     class Meta:
         unique_together = ["batch_class", "user"]

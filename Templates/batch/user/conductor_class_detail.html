@@ -3,6 +3,32 @@
 
 {% block content %}
 
+<div class="container">
+    <table class="table" id="student-joining-table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Email</th>
+            <th scope="col">Name</th>
+            <!-- <th scope="col">Handle 1</th> -->
+            <!-- <th scope="col">Handle 2</th> -->
+          </tr>
+        </thead>
+        
+        <tbody>
+
+            <!-- <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td><a class="btn btn-outline-primary">Accept</a></td>
+                <td><a class="btn btn-outline-danger">Reject</a></td>
+            </tr> -->
+
+        </tbody>
+      </table>
+</div>
+
 
 {% endblock content %}
 
@@ -12,6 +38,28 @@
         const view_url = "{{ view_url }}";
         const user_token = "{{ user_token }}";
         const class_obj_id = "{{ class_obj.id }}";
+        const currentUser = "{{ request.user }}";
+        const batchConductor = "{{ batch_conductor }}" == "True"
+        console.log(batchConductor);
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        };
+
+        const csrftoken = getCookie('csrftoken');
+
     </script>
 
     <script src="{% static 'js/class_conductor.js' %}"></script>

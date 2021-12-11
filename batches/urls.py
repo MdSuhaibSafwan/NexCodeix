@@ -12,5 +12,5 @@ urlpatterns = [
 
     path("user/classes/", views.UserClassesView.as_view(), name="user_classes"),
     path("user/class/<class_id>/view/", views.ClassDetailView.as_view(), name="class_detail_view"),
-
+    path("user/class/make_join/<_id>/", views.make_user_accepted_to_class, name="make_join"),
 ]

@@ -1,7 +1,7 @@
 import json
 from channels.consumer import AsyncConsumer
 from channels.db import database_sync_to_async
-from .utils import get_batch, get_batch_class, get_user_by_token, get_user_by_id
+from .utils import get_batch, get_batch_class, get_user_by_token, get_user_by_id, get_class_joined_user_obj
 
 
 class ClassConsumer(AsyncConsumer):
@@ -47,6 +47,36 @@ class ClassConsumer(AsyncConsumer):
 
     async def websocket_receive(self, event):
         print("RECEIVED FROM WEBSOCKET ", event)
+        """
+        TYPES,
+            1. UJS --> User Joined Successfully
+        """
+
+        data = json.loads(event.get("text"))
+        if not data:
+            await self.send({
+                "type": "websocket.close"
+            })
+            return None
+
+        if data["msg_type"] == "UJS":
+            obj_id = data['class_joined_user_id']
+            cj_user_id = await get_class_joined_user_obj(obj_id)
+            user = cj_user_id.user
+
+            await self.channel_layer.group_send(
+                self.chat_room,
+                {
+                    "type": "send.to_student",
+                    "text": json.dumps({"msg_type": "UJS", "user": user.email, })
+                }
+            )
+
+    async def send_to_student(self, event):
+        await self.send({
+            "type": "websocket.send",
+            "text": event["text"],
+        })
 
     async def send_notification(self, event):
         data = event["text"]
