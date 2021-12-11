@@ -12,6 +12,6 @@ urlpatterns = [
     path("api/", include("main.api.urls")),
 ]
 
-if settings.DEBUG:
+if settings.DEVELOPMENT_MODE:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
