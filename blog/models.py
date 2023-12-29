@@ -14,11 +14,3 @@ class Article(models.Model):
 
 	def __str__(self):
 		return self.title
-
-
-class ArticleImage(models.Model):
-	article = models.ForeignKey(Article, on_delete=models.CASCADE)
-	image = models.CharField(max_length=20400)
-
-	def __str__(self):
-		return self.article.title
