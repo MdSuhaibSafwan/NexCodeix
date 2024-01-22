@@ -21,8 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'blog.apps.BlogConfig',
-    'tinymce',
-
+    'user.apps.UserConfig',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +57,7 @@ WSGI_APPLICATION = 'InfoLinks.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'nexcodeix.sqlite3',
     }
 }
 
@@ -77,61 +76,62 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = "user.User"
 
-TINYMCE_DEFAULT_CONFIG = {
-    'cleanup_on_startup': True,
-    'custom_undo_redo_levels': 20,
-    'selector': 'textarea',
-    'theme': 'silver',
-    'plugins': '''
-            textcolor save link image media preview codesample contextmenu
-            table code lists fullscreen  insertdatetime  nonbreaking
-            contextmenu directionality searchreplace wordcount visualblocks
-            visualchars code fullscreen autolink lists  charmap print  hr
-            anchor pagebreak
-            ''',
-    'toolbar1': '''
-            fullscreen preview bold italic underline | fontselect,
-            fontsizeselect  | forecolor backcolor | alignleft alignright |
-            aligncenter alignjustify | indent outdent | bullist numlist table |
-            | link image media | codesample |
-            ''',
-    'toolbar2': '''
-            visualblocks visualchars |
-            charmap hr pagebreak nonbreaking anchor |  code |
-            ''',
-    'contextmenu': 'formats | link image',
-    'menubar': True,
-    'statusbar': True,
+# TINYMCE_DEFAULT_CONFIG = {
+#     'cleanup_on_startup': True,
+#     'custom_undo_redo_levels': 20,
+#     'selector': 'textarea',
+#     'theme': 'silver',
+#     'plugins': '''
+#             textcolor save link image media preview codesample contextmenu
+#             table code lists fullscreen  insertdatetime  nonbreaking
+#             contextmenu directionality searchreplace wordcount visualblocks
+#             visualchars code fullscreen autolink lists  charmap print  hr
+#             anchor pagebreak
+#             ''',
+#     'toolbar1': '''
+#             fullscreen preview bold italic underline | fontselect,
+#             fontsizeselect  | forecolor backcolor | alignleft alignright |
+#             aligncenter alignjustify | indent outdent | bullist numlist table |
+#             | link image media | codesample |
+#             ''',
+#     'toolbar2': '''
+#             visualblocks visualchars |
+#             charmap hr pagebreak nonbreaking anchor |  code |
+#             ''',
+#     'contextmenu': 'formats | link image',
+#     'menubar': True,
+#     'statusbar': True,
 
-    "file_picker_callback": """function (cb, value, meta) {
-        var input = document.createElement("input");
-        input.setAttribute("type", "file");
-        if (meta.filetype == "image") {
-            input.setAttribute("accept", "image/*");
-        }
-        if (meta.filetype == "media") {
-            input.setAttribute("accept", "video/*");
-        }
+#     "file_picker_callback": """function (cb, value, meta) {
+#         var input = document.createElement("input");
+#         input.setAttribute("type", "file");
+#         if (meta.filetype == "image") {
+#             input.setAttribute("accept", "image/*");
+#         }
+#         if (meta.filetype == "media") {
+#             input.setAttribute("accept", "video/*");
+#         }
 
-        input.onchange = function () {
-            var file = this.files[0];
-            var reader = new FileReader();
-            reader.onload = function () {
-                var id = "blobid" + (new Date()).getTime();
-                var blobCache = tinymce.activeEditor.editorUpload.blobCache;
-                var base64 = reader.result.split(",")[1];
-                var blobInfo = blobCache.create(id, file, base64);
-                blobCache.add(blobInfo);
-                cb(blobInfo.blobUri(), { title: file.name });
-            };
-            reader.readAsDataURL(file);
-        };
-        input.click();
-    }"""
+#         input.onchange = function () {
+#             var file = this.files[0];
+#             var reader = new FileReader();
+#             reader.onload = function () {
+#                 var id = "blobid" + (new Date()).getTime();
+#                 var blobCache = tinymce.activeEditor.editorUpload.blobCache;
+#                 var base64 = reader.result.split(",")[1];
+#                 var blobInfo = blobCache.create(id, file, base64);
+#                 blobCache.add(blobInfo);
+#                 cb(blobInfo.blobUri(), { title: file.name });
+#             };
+#             reader.readAsDataURL(file);
+#         };
+#         input.click();
+#     }"""
 
     
-}
+# }
 
 
 LANGUAGE_CODE = 'en-us'
