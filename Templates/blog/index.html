@@ -20,8 +20,8 @@
         <div class="section-title">
           <h2>What We Do</h2>
           <p>
-			At NexCodeix, we are not just an agency; we are architects of digital transformation. Specializing in building bespoke software solutions, we embark on a mission to turn your unique ideas into powerful, scalable realities. Our dedicated team of skilled professionals thrives on innovation, crafting tailored software that seamlessly aligns with your vision and business goals. From conceptualization to execution, we pride ourselves on delivering cutting-edge applications, robust platforms, and transformative technologies. With a commitment to excellence, NexCodeix is your trusted partner in navigating the dynamic landscape of technology, ensuring your digital footprint leaves an indelible mark in the ever-evolving realm of software solutions.
-		</p>
+    			  At NexCodeix, we are not just an agency; we are architects of digital transformation. Specializing in building bespoke software solutions, we embark on a mission to turn your unique ideas into powerful, scalable realities. Our dedicated team of skilled professionals thrives on innovation, crafting tailored software that seamlessly aligns with your vision and business goals. From conceptualization to execution, we pride ourselves on delivering cutting-edge applications, robust platforms, and transformative technologies. With a commitment to excellence, NexCodeix is your trusted partner in navigating the dynamic landscape of technology, ensuring your digital footprint leaves an indelible mark in the ever-evolving realm of software solutions.
+    		  </p>
         </div>
 
         <div class="row">
@@ -76,22 +76,25 @@
 
         <div class="row portfolio-container">
 
-          <div class="col-lg-4 col-md-6 portfolio-item filter-app wow fadeInUp">
-            <div class="portfolio-wrap">
-              <figure>
-                <img src="{% static 'assets/img/portfolio/portfolio-1.jpg' %}" class="img-fluid" alt="">
-                <a href="{% static 'assets/img/portfolio/portfolio-1.jpg' %}" data-gallery="portfolioGallery" class="link-preview portfolio-lightbox" title="Preview"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" class="link-details" title="More Details"><i class="bx bx-link"></i></a>
-              </figure>
+          {% for project in projects %}
 
-              <div class="portfolio-info">
-                <h4><a href="portfolio-details.html">App 1</a></h4>
-                <p>App</p>
+            <div class="col-lg-4 col-md-6 portfolio-item filter-app wow fadeInUp">
+              <div class="portfolio-wrap">
+                <figure>
+                  <img src="{{ project.get_image }}" class="img-fluid" alt="">
+                  <a href="{{ project.get_image }}" data-gallery="portfolioGallery" class="link-preview portfolio-lightbox" title="Preview"><i class="bx bx-plus"></i></a>
+                  <a href="#" class="link-details" title="More Details"><i class="bx bx-link"></i></a>
+                </figure>
+
+                <div class="portfolio-info">
+                  <h4><a href="portfolio-details.html">{{ project.name }}</a></h4>
+                  <p>Web App</p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="col-lg-4 col-md-6 portfolio-item filter-web wow fadeInUp" data-wow-delay="0.1s">
+          {% endfor %}
+<!--           <div class="col-lg-4 col-md-6 portfolio-item filter-web wow fadeInUp" data-wow-delay="0.1s">
             <div class="portfolio-wrap">
               <figure>
                 <img src="{% static 'assets/img/portfolio/portfolio-2.jpg' %}" class="img-fluid" alt="">
@@ -119,52 +122,7 @@
                 <p>App</p>
               </div>
             </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-card wow fadeInUp">
-            <div class="portfolio-wrap">
-              <figure>
-                <img src="{% static 'assets/img/portfolio/portfolio-4.jpg' %}" class="img-fluid" alt="">
-                <a href="{% static 'assets/img/portfolio/portfolio-4.jpg' %}" class="link-preview portfolio-lightbox" data-gallery="portfolioGallery" title="Preview"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" class="link-details" title="More Details"><i class="bx bx-link"></i></a>
-              </figure>
-
-              <div class="portfolio-info">
-                <h4><a href="portfolio-details.html">Card 2</a></h4>
-                <p>Card</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-web wow fadeInUp" data-wow-delay="0.1s">
-            <div class="portfolio-wrap">
-              <figure>
-                <img src="{% static 'assets/img/portfolio/portfolio-5.jpg' %}" class="img-fluid" alt="">
-                <a href="{% static 'assets/img/portfolio/portfolio-5.jpg' %}" class="link-preview portfolio-lightbox" data-gallery="portfolioGallery" title="Preview"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" class="link-details" title="More Details"><i class="bx bx-link"></i></a>
-              </figure>
-
-              <div class="portfolio-info">
-                <h4><a href="portfolio-details.html">Web 2</a></h4>
-                <p>Web</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-app wow fadeInUp" data-wow-delay="0.2s">
-            <div class="portfolio-wrap">
-              <figure>
-                <img src="{% static 'assets/img/portfolio/portfolio-6.jpg' %}" class="img-fluid" alt="">
-                <a href="{% static 'assets/img/portfolio/portfolio-6.jpg' %}" class="link-preview portfolio-lightbox" data-gallery="portfolioGallery" title="Preview"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" class="link-details" title="More Details"><i class="bx bx-link"></i></a>
-              </figure>
-
-              <div class="portfolio-info">
-                <h4><a href="portfolio-details.html">App 3</a></h4>
-                <p>App</p>
-              </div>
-            </div>
-          </div>
+          </div> -->
 
         </div>
 
@@ -173,7 +131,7 @@
 
 
     <!-- ======= Team Section ======= -->
-    <section id="team" class="team">
+    <!-- <section id="team" class="team">
       <div class="container">
 
         <div class="section-title">
@@ -236,7 +194,8 @@
         </div>
 
       </div>
-    </section><!-- End Team Section -->
+    </section> -->
+    <!-- End Team Section -->
 
     <!-- ======= Contact Section ======= -->
     <section id="contact" class="contact section-bg">
@@ -279,7 +238,7 @@
 
         <div class="row mt-5 justify-content-center">
           <div class="col-lg-10">
-            <form action="forms/contact.php" method="post" role="form" class="php-email-form" id="contactus-form">
+            <form action="." method="post" role="form" class="php-email-form" id="contactus-form">
               <div class="row">
                 <div class="col-md-6 form-group">
                   <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
@@ -294,7 +253,7 @@
               <div class="form-group mt-3">
                 <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
               </div>
-              <div class="my-3">
+              <div class="my-3" id="query-response-message">
                 <div class="loading">Loading</div>
                 <div class="error-message"></div>
                 <div class="sent-message">Your message has been sent. Thank you!</div>
@@ -312,3 +271,99 @@
 
 
 {% endblock content %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script type="text/javascript">
+    const queryUrl = "{% url 'send-query' %}";
+  </script>
+
+  <!-- <script src="{% static 'assets/js/index.js' %}"></script> -->
+
+<script type="text/javascript">
+  const sendQueryUrl = queryUrl;
+console.log(sendQueryUrl);
+var form = document.querySelector("#contactus-form");
+
+form.addEventListener('submit', (event) => {
+  console.log("Event ", event);
+  event.preventDefault();
+  var inputs = event.target.getElementsByTagName("input");
+  console.log(inputs);
+  var data = {};
+  for (input of inputs){
+    let name = input.getAttribute("id");
+    let val = input.value;
+    data[name] = val;
+  };
+
+  let textField = event.target.getElementsByTagName("textarea")[0];
+  data[textField.getAttribute("name")] = textField.value;
+
+  return sendMessageDataToServer(data);
+
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+};
+
+
+const csrftoken = getCookie('csrftoken');
+
+function sendMessageDataToServer(data){
+    console.log(data);
+    // var formData = new FormData();
+    // formData.append('name', data.name);
+    // formData.append('email', data.email);
+    // formData.append('subject', data.subject);
+    // formData.append('message', data.message);
+
+    // console.log(formData);
+
+
+    stringifyData = JSON.stringify(data)
+
+    let csrftoken = getCookie('csrftoken');
+    let response = fetch(sendQueryUrl, {
+        method: 'POST',
+        body: stringifyData,
+        headers: { 
+          'Accept': 'application/json, text/plain, */*',
+          'Content-Type': 'application/json',
+          "X-CSRFToken": csrftoken 
+        },
+    })
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((data) => {
+        console.log(data);
+        var respStatus = data.status;
+        if (respStatus == 200){
+          var msgDiv = document.querySelector("#query-response-message");
+          var sentMsgDiv = msgDiv.querySelector(".sent-message");
+          sentMsgDiv.classList.add("d-block");
+        };
+      });
+
+
+
+}
+
+</script>
+
+
+{% endblock scripts %}
